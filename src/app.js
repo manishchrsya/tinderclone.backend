@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 
 
-app.get("/user", (req, res) => {
+app.get("/user/:userId", (req, res) => {
     // res.send("user route get api");
     res.send({ name: "Manish", age: 29, city: "Noida" });
 });
