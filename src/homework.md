@@ -26,3 +26,6 @@
 
 
 
+- Multiple route handlers
+- next()
+- next function and errors along with res.send()
