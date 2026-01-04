@@ -39,6 +39,9 @@
 - Create cluster on mongodb atlas
 - install mongoose
 - Connect the application to the database using <connection-url/tinder-clone>
-- Call the connect db function before the server is started on the configured port number
+- Call the connect db function before the server is started on the configured port    number
 - Create a userSchema and UserModel
+- Create POST /signup api to add data to the database
+- Push some data using the api call from postman
+- Error handling using try and catch
 
