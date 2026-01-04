@@ -40,3 +40,5 @@
 - install mongoose
 - Connect the application to the database using <connection-url/tinder-clone>
 - Call the connect db function before the server is started on the configured port number
+- Create a userSchema and UserModel
+

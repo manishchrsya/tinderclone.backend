@@ -5,10 +5,9 @@ const connectDB = async () => {
     try {
         await mongoose.connect(url);
     } catch (error) {
-
+        console.log("connection failed", error);
     }
 };
 
 module.exports = { connectDB };
 
-// mongoose.connect("mongodb://"localhost:27017/tinderDB", { useNewUrlParser: true, useUnifiedTopology: true });
