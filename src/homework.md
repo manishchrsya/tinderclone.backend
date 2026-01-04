@@ -34,3 +34,9 @@
 - How express js basically handles requests behind the scenes
 - Diff between app.use() vs app.all()
 - error handling using the app.use("/", (err, req, res, next) => {})
+
+
+- Create cluster on mongodb atlas
+- install mongoose
+- Connect the application to the database using <connection-url/tinder-clone>
+- Call the connect db function before the server is started on the configured port number

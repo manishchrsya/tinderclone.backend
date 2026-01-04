@@ -1,5 +1,6 @@
 const express = require("express");
 const { adminAuth, userAuth } = require("./middlewares/auth");
+const { connectDB } = require("./config/database");
 
 const app = express();
 
@@ -28,8 +29,14 @@ app.get("/admin/deleteUser", (req, res) => {
     // Logic of fetching all data
 });
 
-
-app.listen(3000, () => {
-    console.log("server started of the tinder on port 3000...");
+connectDB().then(() => {
+    console.log("Database connected successfully");
+    app.listen(3000, () => {
+        console.log("server started of the tinder on port 3000...");
+    });
+}).catch((err) => {
+    console.log("Database connection failed", err);
 });
+
+
 
