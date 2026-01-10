@@ -23,8 +23,13 @@ const appApi = async () => {
 
     app.patch("/updateUser/:id", async (req, res) => {
         try {
-            const userId = req.params.id;
+            const userId = req.params?.id;
             const updatedPayload = req.body;
+            const ALLOWED_UPDATES = ["photoUrl", "about", "skills", "gender"];
+            const isAllowedUpdates = Object.keys(updatedPayload).every((key) => ALLOWED_UPDATES.includes(key));
+            if (!isAllowedUpdates) {
+                throw new Error("Update is not allowed");
+            }
             const user = await UserModel.findByIdAndUpdate(userId, updatedPayload, { new: true, runValidators: true }); // Update user by ID with the new data
             res.send({
                 data: user,
