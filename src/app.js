@@ -21,6 +21,24 @@ const appApi = async () => {
         });
     });
 
+    app.patch("/updateUser/:id", async (req, res) => {
+        try {
+            const userId = req.params.id;
+            const updatedPayload = req.body;
+            const user = await UserModel.findByIdAndUpdate(userId, updatedPayload, { new: true, runValidators: true }); // Update user by ID with the new data
+            res.send({
+                data: user,
+                message: "User updated successfully"
+            });
+        } catch (err) {
+            res.status(500).send({ // Send a 500 Internal Server Error status code
+                message: "Error updating user",
+                error: err.message
+            });
+        }
+    },);
+
+
     app.get("/user", async (req, res) => {
         try {
             const email = req.body.emailId;

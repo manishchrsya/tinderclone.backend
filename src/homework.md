@@ -45,3 +45,23 @@
 - Push some data using the api call from postman
 - Error handling using try and catch
 
+- JS Object vs json
+- Add the express.json middleware to your app
+- Make your signup api dynamic to recieve data from the end user
+- user.findone with duplicate email ids, which object is retruned
+- API get user by email
+- API Feed API - GET /feed - get all the users from the database
+- API GET user by id
+- Create a Delete user api 
+- Difference between patch and put
+- API Update the user
+- Explore the mongoose documentation for model api
+- What are options in a Model.findoneandupdate method explore more about it
+- API - update the user with email id
+
+- Explore schema type options from the documentation
+- add required, unique , lowercase, min, minLength, trim
+- Add Default
+- Create a custom validate func for gender
+- Improve the db schema - PUT all the appropriate on each field in schema
+- Add timestamp to the user schema
