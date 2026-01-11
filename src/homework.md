@@ -67,3 +67,4 @@
 - Add timestamp to the user schema
 - Add API level validation on Patch request and signup post API
 - Data Sanitization - Add API validation for each fields
+- Explore validator library

@@ -1,24 +1,73 @@
 const express = require("express");
 const { connectDB } = require("./config/database");
 const { UserModel } = require("./models/user");
+const { validateSignupData } = require("./utils/validation");
+const bcrypt = require('bcrypt');
 
 const app = express(); // Create an Express application
 app.use(express.json()); // Middleware to parse JSON request bodies
 
 const appApi = async () => {
-    app.post("/signup", (req, res) => {
-        const user = new UserModel(req.body); // Create a new user instance with the request body data
-        user.save().then((response) => {
-            res.send({
-                data: response,
-                message: "User signed up successfully"
+    app.post("/signup", async (req, res) => {
+        try {
+            // validate the incoming signup data
+            validateSignupData(req);
+
+            // Encript the password
+
+            const passwordHash = await bcrypt.hash(req.body.password, 10);
+            const userData = {
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                emailId: req.body.emailId,
+                password: passwordHash
+            };
+            const user = new UserModel(userData);
+            user.save().then((response) => {
+                res.send({
+                    message: "User signed up successfully"
+                });
+            }).catch((err) => {
+                res.status(500).send({ /// Send a 500 Internal Server Error status code
+                    message: "Error signing up user",
+                    error: err.message
+                });
             });
-        }).catch((err) => {
+        } catch (error) {
             res.status(500).send({ /// Send a 500 Internal Server Error status code
                 message: "Error signing up user",
                 error: err.message
             });
-        });
+        }
+
+    });
+
+    app.post("/login", async (req, res) => {
+        try {
+            const { emailId, password } = req.body;
+            const user = await UserModel.findOne({ emailId: emailId }); // Fetch user by email from the database
+            if (!user) {
+                return res.status(404).send({ // Send a 404 Not Found status code
+                    message: "User not found"
+                });
+            }
+            const isPasswordMatch = await bcrypt.compare(password, user.password);
+            if (isPasswordMatch) {
+                res.send({
+                    message: "User logged in successfully"
+                });
+            } else {
+                return res.status(401).send({ // Send a 401 Unauthorized status code
+                    message: "Invalid password"
+                });
+            }
+
+        } catch (err) {
+            res.status(500).send({ // Send a 500 Internal Server Error status code
+                message: "Error logging in user",
+                error: err.message
+            });
+        }
     });
 
     app.patch("/updateUser/:id", async (req, res) => {
@@ -30,9 +79,8 @@ const appApi = async () => {
             if (!isAllowedUpdates) {
                 throw new Error("Update is not allowed");
             }
-            const user = await UserModel.findByIdAndUpdate(userId, updatedPayload, { new: true, runValidators: true }); // Update user by ID with the new data
+            await UserModel.findByIdAndUpdate(userId, updatedPayload, { new: true, runValidators: true }); // Update user by ID with the new data
             res.send({
-                data: user,
                 message: "User updated successfully"
             });
         } catch (err) {
