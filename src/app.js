@@ -3,7 +3,6 @@ const { connectDB } = require("./config/database");
 const { UserModel } = require("./models/user");
 const { validateSignupData } = require("./utils/validation");
 const cookieParser = require('cookie-parser');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { userAuth } = require("./middlewares/auth");
 
