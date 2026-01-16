@@ -2,10 +2,13 @@ const express = require("express");
 const { connectDB } = require("./config/database");
 const { UserModel } = require("./models/user");
 const { validateSignupData } = require("./utils/validation");
+const cookieParser = require('cookie-parser');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
 const app = express(); // Create an Express application
 app.use(express.json()); // Middleware to parse JSON request bodies
+app.use(cookieParser()); // Middleware to parse cookies
 
 const appApi = async () => {
     app.post("/signup", async (req, res) => {
@@ -53,6 +56,8 @@ const appApi = async () => {
             }
             const isPasswordMatch = await bcrypt.compare(password, user.password);
             if (isPasswordMatch) {
+                const token = jwt.sign({ _id: user._id }, "TinderCLoneSecretKey", { expiresIn: '1d' });
+                res.cookie("token", token); // Set a cookie named 'token' with the generated token
                 res.send({
                     message: "User logged in successfully"
                 });
@@ -68,6 +73,38 @@ const appApi = async () => {
                 error: err.message
             });
         }
+    });
+
+    app.get("/profile", async (req, res) => {
+
+        try {
+            const cookies = req.cookies;
+
+            const decoded = jwt.verify(cookies.token, "TinderCLoneSecretKey");
+            if (!decoded) {
+                return res.status(401).send({ // Send a 401 Unauthorized status code
+                    message: "Unauthorized Access"
+                });
+            }
+            const user = await UserModel.findById(decoded._id);
+            if (!user) {
+                return res.status(404).send({ // Send a 404 Not Found status code
+                    message: "User not found"
+                });
+            } else {
+                const { password, ...restProfileDetails } = user.toObject(); // Destructure to exclude password            
+                res.send({
+                    data: restProfileDetails,
+                    message: "User profile fetched successfully"
+                });
+            }
+        } catch (error) {
+            res.status(500).send({ // Send a 500 Internal Server Error status code
+                message: "Invalid token",
+                error: error.message
+            });
+        }
+
     });
 
     app.patch("/updateUser/:id", async (req, res) => {
@@ -90,7 +127,6 @@ const appApi = async () => {
             });
         }
     },);
-
 
     app.get("/user", async (req, res) => {
         try {
@@ -123,8 +159,9 @@ const appApi = async () => {
                     message: "User not found"
                 });
             } else {
+                const filteredUsers = user.map(({ password, ...rest }) => rest);
                 res.send({
-                    data: user,
+                    data: filteredUsers,
                     message: "Users fetched successfully"
                 });
             }
