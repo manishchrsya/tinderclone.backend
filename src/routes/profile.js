@@ -3,6 +3,7 @@ const { userAuth } = require("../middlewares/auth");
 const { MESSAGE } = require("../constants/messageConstants");
 const { API_URL } = require("../constants/apiConstants");
 const { validateEditProfileData } = require("../utils/validation");
+const bcrypt = require("bcrypt");
 
 const router = express.Router();
 
@@ -34,6 +35,25 @@ router.patch("/profile/edit", userAuth, async (req, res) => {
         } else {
             res.status(400).send("Invalid payload");
         }
+    } catch (error) {
+        res.status(500).send(error.message || "Something went wrong");
+    }
+});
+
+router.patch("/profile/password", userAuth, async (req, res) => {
+    try {
+        const loggedInUser = req.user;
+        const { currentPassword, newPassword } = req.body;
+        const isPasswordMatch = await loggedInUser.validatePassword(currentPassword);
+        if (isPasswordMatch) {
+            const passwordHash = await bcrypt.hash(newPassword, 10);
+            loggedInUser.password = passwordHash;
+            loggedInUser.save();
+            res.send("Password changed successfully");
+        } else {
+            res.status(400).send("Current password is incorrect!");
+        }
+
     } catch (error) {
         res.status(500).send(error.message || "Something went wrong");
     }
