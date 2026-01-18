@@ -10,7 +10,6 @@ router.post("/signup", async (req, res) => {
         validateSignupData(req);
 
         // Encript the password
-
         const passwordHash = await bcrypt.hash(req.body.password, 10);
         const userData = {
             firstName: req.body.firstName,
@@ -19,7 +18,7 @@ router.post("/signup", async (req, res) => {
             password: passwordHash
         };
         const user = new UserModel(userData);
-        user.save().then((response) => {
+        user.save().then(() => {
             res.send({
                 message: "User signed up successfully"
             });
