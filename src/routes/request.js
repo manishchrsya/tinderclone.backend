@@ -16,6 +16,9 @@ router.post("/request/send/:status/:toUserId", userAuth, async (req, res) => {
         if (!allowedStatus.includes(status)) {
             res.status(400).send({ message: "invalid status type" + status });
         }
+        if (fromUserId.toString() === toUserId.toString()) {
+            res.status(400).send({ message: "Can not send request to yourself" });
+        }
         const toUser = await UserModel.findById(toUserId);
 
         if (!toUser) {

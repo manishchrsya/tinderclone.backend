@@ -30,9 +30,16 @@ router.get("/user/connections", userAuth, async (req, res) => {
                 { fromUserId: loggedInUser._id },
                 { toUserId: loggedInUser._id }
             ]
-        }).populate("fromUserId", ["firstName", "lastName", "photoUrl", "about", "age", "skills"]);
-        const data = connections.map(({ _id, fromUserId, createdAt, updatedAt }) => ({ _id, fromUserId, createdAt, updatedAt }));
-        res.send({ messages: "connections loaded successfully", data });
+        }).populate("fromUserId", ["firstName", "lastName", "photoUrl", "about", "age", "skills"])
+            .populate("toUserId", ["firstName", "lastName", "photoUrl", "about", "age", "skills"]);
+        const data = connections.map((row) => {
+            if (row.fromUserId._id.toString() === loggedInUser._id.toString()) {
+                return row.toUserId;
+            }
+            return row.fromUserId;
+        });
+
+        res.send({ messages: "Connections loaded successfully", data });
 
     } catch (error) {
         res.status(400).send(error.message || "Something went wrong");
