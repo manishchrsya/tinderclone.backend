@@ -2,9 +2,10 @@ const express = require("express");
 const bcrypt = require('bcrypt');
 const { validateSignupData } = require("../utils/validation");
 const { UserModel } = require("../models/user");
+const { API_URL } = require("../constants/apiConstants");
 const router = express.Router();
 
-router.post("/signup", async (req, res) => {
+router.post(API_URL.SIGNUP, async (req, res) => {
     try {
         // validate the incoming signup data
         validateSignupData(req);
@@ -37,7 +38,7 @@ router.post("/signup", async (req, res) => {
 
 });
 
-router.post("/login", async (req, res) => {
+router.post(API_URL.LOGIN, async (req, res) => {
     try {
         const { emailId, password } = req.body;
         const user = await UserModel.findOne({ emailId: emailId }); // Fetch user by email from the database
@@ -67,7 +68,7 @@ router.post("/login", async (req, res) => {
     }
 });
 
-router.post("/logout", async (req, res) => {
+router.post(API_URL.LOGOUT, async (req, res) => {
     try {
         const cookie = req.cookie;
 

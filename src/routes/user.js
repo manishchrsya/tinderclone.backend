@@ -2,11 +2,12 @@ const { Router } = require("express");
 const { userAuth } = require("../middlewares/auth");
 const connectionRequestModel = require("../models/connectRequests");
 const { UserModel } = require("../models/user");
+const { API_URL } = require("../constants/apiConstants");
 
 const router = Router();
 
 // get all the connections of the user
-router.get("/user/requests/received", userAuth, async (req, res) => {
+router.get(API_URL.USER_REQUEST_RECEIVED, userAuth, async (req, res) => {
     try {
         console.log("testing review request triggered");
 
@@ -21,7 +22,7 @@ router.get("/user/requests/received", userAuth, async (req, res) => {
     }
 });
 
-router.get("/user/connections", userAuth, async (req, res) => {
+router.get(API_URL.USER_CONNECTIONS, userAuth, async (req, res) => {
     try {
         const loggedInUser = req.user;
 
@@ -48,7 +49,7 @@ router.get("/user/connections", userAuth, async (req, res) => {
 
 });
 
-router.get("/user/feed", userAuth, async (req, res) => {
+router.get(API_URL.USER_FEED, userAuth, async (req, res) => {
     try {
         /**
          * 1. loggedin user should not see his profile in the feed
@@ -92,6 +93,5 @@ router.get("/user/feed", userAuth, async (req, res) => {
 
     }
 });
-
 
 module.exports = router;

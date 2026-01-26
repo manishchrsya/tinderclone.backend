@@ -23,7 +23,7 @@ router.get(API_URL.PROFILE_VIEW, userAuth, async (req, res) => {
 
 });
 
-router.patch("/profile/edit", userAuth, async (req, res) => {
+router.patch(API_URL.PROFILE_EDIT, userAuth, async (req, res) => {
     try {
         const isAllowedUpdates = validateEditProfileData(req);
         if (isAllowedUpdates) {
@@ -40,7 +40,7 @@ router.patch("/profile/edit", userAuth, async (req, res) => {
     }
 });
 
-router.patch("/profile/password", userAuth, async (req, res) => {
+router.patch(API_URL.PROFILE_PASSWORD, userAuth, async (req, res) => {
     try {
         const loggedInUser = req.user;
         const { currentPassword, newPassword } = req.body;
