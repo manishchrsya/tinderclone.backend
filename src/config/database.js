@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
-const url = process.env.MONGO_CONNECTION_URL;
+const url = "mongodb+srv://chaurasiyamns_db_user:PdgSduhQRldjezqt@cluster0.f422hj0.mongodb.net/?appName=Cluster0/tinderClone";
+
 const connectDB = async () => {
     try {
         return await mongoose.connect(url, {

@@ -26,8 +26,6 @@ const API_URL = {
     USER_REQUEST_RECEIVED: "/user/requests/received",
     USER_CONNECTIONS: "/user/connections",
     USER_FEED: "/user/feed"
-
-    // SEND_CONNECTION_REQUEST: "/sendConnectionRequest"
 };
 
 module.exports = { API_URL };

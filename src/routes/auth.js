@@ -65,6 +65,8 @@ router.post(API_URL.LOGIN, async (req, res) => {
             message: "Error logging in user",
             error: err.message
         });
+        console.log("login error", err);
+
     }
 });
 
